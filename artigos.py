@@ -10,7 +10,7 @@ import xml.dom.minidom as mnd
 # artigos[i][3] -> Retorna o título do periódico 
 #
 
-def artigosPublicados(path = ''):
+def artigosPublicados(path):
     doc = mnd.parse(path);
 
     # Pega o root dos artigos
