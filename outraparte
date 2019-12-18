@@ -102,14 +102,18 @@ def searchWord(model, sentences, porct): # mesma coisa q o searchChar
 
 def searchChar(alcance, modelo, sentence, porct): #Alcance é quantas palavras o código vai analisar, modelo é a sentença desejada, sentence é o conjunto
     #de todas sentenças, porct é a porcentagem do quanto as palavras precisam ser próximas
+    
     try:
         palavra = searchWord(modelo, sentence, porct)
         
     
+
         
         copyPalavra = palavra[0][:] #Serve para encontrar o índice das palavras que mais combinam
         copyPalavra.sort()
         copyPalavra.reverse()
+        
+        
         lista1 = []
         listaPalavras = []
         
@@ -118,6 +122,9 @@ def searchChar(alcance, modelo, sentence, porct): #Alcance é quantas palavras o
             
         for i in lista1:
             listaPalavras.append(palavra[1][i])
+        
+        
+        print(lista1)
             
         modelo2 = list(modelo)
         modelo2.remove(" ")
@@ -136,7 +143,11 @@ def searchChar(alcance, modelo, sentence, porct): #Alcance é quantas palavras o
         provavelStr = contadorLista.index(max(contadorLista))
         teste1 = " ".join(listaPalavras[provavelStr])
         
-        return teste1
+        print(teste1)
+        
+        maior_indice = palavra[1].index(teste1.split(" "))
+        print(maior_indice)
+        return teste1, maior_indice
     except TypeError:
         return "Não consta"
     
@@ -156,24 +167,47 @@ def runAll(): #Só um "procedimento" pra rodar o código
             lista_an.append(dic_geral[3][i]["NOME-DO-EVENTO"][j][1])
         lista_an2.append(lista_an)
         lista_an = []
-        
-    print(len(lista_an2))
 
     
     
     df = pd.ExcelFile('Qualis_Evento.xlsx').parse('Qualis2019') 
     x=[]
+    y=[]
     x.append(df['Nome Padrão'])
+    y.append(df['Qualis Final'])
+    
     
     teste_lista = []
     teste_dic = {}
+    lista_extrato = []
+    lista_extrato2 = []
+    
     for i in range (len(lista_an2)):
         for j in (lista_an2[i]):
-            teste1 = searchChar(4,j,x[0],75)
-            teste_lista.append(teste1)
+            teste1 = searchChar(2,j,x[0],85)
+            
+            if teste1 == "Não consta":
+                lista_extrato.append("Não consta")
+            else:
+                lista_extrato.append(y[0][teste1[1]])
+            
+            
+            teste_lista.append(teste1[0])
+            
+        dic_geral[3][i]["EXTRATO"] = lista_extrato
         teste_dic[nomes_completos[i]] = teste_lista
         teste_lista = []
+        lista_extrato2.append(lista_extrato)
+        lista_extrato = []
         
-    return teste_dic, lista_an2
+
+        
+        
+    return dic_geral
 
 final_teste = runAll()
+
+
+
+
+
